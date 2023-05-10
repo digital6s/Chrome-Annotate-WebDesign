@@ -1,3 +1,6 @@
+// Creates a context menu item using the chrome.contextMenus.create API. This context menu item allows the user to right-click on a web page and select "Add a note". When the user clicks on this menu item, it sends a message to the content script to show the note popup at the location of the right-click. 
+
+
 let activeTabId;
 
 chrome.contextMenus.create({
@@ -8,6 +11,7 @@ chrome.contextMenus.create({
   }
 });
 
+//Listens to messages from the content script using the chrome.runtime.onMessage.addListener API. When the content script sends a "contentScriptLoaded" message, it sets the activeTabId variable to the ID of the current tab.
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   if (request.action === "contentScriptLoaded") {
     activeTabId = sender.tab.id;
@@ -17,10 +21,12 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   }
 });
 
+//Listens to the chrome.tabs.onActivated event using the chrome.tabs.onActivated.addListener API. This event is triggered when the user switches to a different tab. When this event is triggered, it updates the activeTabId variable to the ID of the newly activated tab.
 chrome.tabs.onActivated.addListener(function(activeInfo) {
   activeTabId = activeInfo.tabId;
 });
 
+//Listens to the chrome.browserAction.onClicked event using the chrome.browserAction.onClicked.addListener API. This event is triggered when the user clicks on the extension icon in the toolbar. When this event is triggered, it captures a screenshot of the current tab using the chrome.tabs.captureVisibleTab API, converts the screenshot to a PDF using the jsPDF library, and downloads the PDF using the chrome.downloads.download API.
 chrome.browserAction.onClicked.addListener(function(tab) {
   chrome.tabs.captureVisibleTab(function(screenshotUrl) {
     const pdf = new jsPDF();
