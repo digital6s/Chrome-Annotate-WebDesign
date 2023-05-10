@@ -1,0 +1,27 @@
+let activeTabId;
+
+chrome.contextMenus.create({
+  title: "Add a note",
+  contexts: ["page"],
+  onclick: function(info, tab) {
+    chrome.tabs.sendMessage(activeTabId, { action: "showNotePopup", x: info.x, y: info.y });
+  }
+});
+
+chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+  if (request.action === "contentScriptLoaded") {
+    activeTabId = sender.tab.id;
+  } else if (request.action === "saveNote") {
+    const note = request.note;
+    // save the note to local storage or a database
+  }
+});
+
+chrome.tabs.onActivated.addListener(function(activeInfo) {
+  activeTabId = activeInfo.tabId;
+});
+
+chrome.browserAction.onClicked.addListener(function(tab) {
+  chrome.tabs.captureVisibleTab(function(screenshotUrl) {
+    const pdf = new jsPDF();
+    pdf.addImage(screenshotUrl
