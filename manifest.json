@@ -1,0 +1,20 @@
+{
+  "name": "Note Taker",
+  "version": "1.0",
+  "description": "Add notes to web pages and save as PDFs",
+  "manifest_version": 2,
+  "permissions": [
+    "contextMenus",
+    "tabs",
+    "downloads"
+  ],
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"]
+    }
+  ],
+  "background": {
+    "scripts": ["background.js"]
+  }
+}
